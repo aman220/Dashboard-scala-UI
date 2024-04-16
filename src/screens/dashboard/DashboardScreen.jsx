@@ -1,0 +1,60 @@
+import React, { useEffect, useState } from "react";
+import { AreaCards, AreaCharts, AreaTable, AreaTop } from "../../components";
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Typography,
+  Input,
+  CardBody,
+} from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
+const Dashboard = () => {
+  const [open, setOpen] = React.useState(false);
+  const [month, setMonth] = useState("");
+  const handleOpen = () => setOpen(!open);
+  const nav = useNavigate();
+  const currmon = new Date().toLocaleDateString();
+  const check = ()=>{
+    const check = localStorage.getItem("token")
+    if(!check){
+      nav('/login')
+    }else{
+      nav('/')
+    }
+  };
+
+  useEffect(()=>{
+    check()
+  },[])
+
+  return (
+    <div className="content-area">
+      <AreaTop />
+      <AreaCards />
+      <AreaCharts />
+      <AreaTable />
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader>Update</DialogHeader>
+        <DialogBody>
+          Please Enter Your Expected Expense for this {currmon}
+        </DialogBody>
+        <CardBody className="flex flex-col gap-4">
+          <Typography className="-mb-2" variant="h6">
+            Expected Expenses
+          </Typography>
+          <Input label="expectedexpense" size="lg" />
+          <DialogFooter>
+            <Button variant="gradient" color="green" onClick={handleOpen}>
+              <span>Update</span>
+            </Button>
+          </DialogFooter>
+        </CardBody>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Dashboard;
