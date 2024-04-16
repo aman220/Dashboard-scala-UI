@@ -17,7 +17,7 @@ const AresSavingsTable = () => {
       const response = await axios.post(
         "http://localhost:7000/api/v1/transaction/getRecentTransaction",
         {
-          userId: "2",
+          userId: localStorage.getItem("key"),
         }
       );
       if (response.data.success) {
@@ -32,6 +32,8 @@ const AresSavingsTable = () => {
       console.error("Error fetching recent transactions:", error.message);
     }
   };
+
+  console.log(recentTransactions)
 
   return (
     <section className="content-area-table">
@@ -53,39 +55,34 @@ const AresSavingsTable = () => {
             <tbody>
               {recentTransactions?.map((transaction) => (
                 <tr key={transaction.id}>
-                  {transaction.type === "expense" ? (
-                    <td>
-                      <span className="font-sans font-semibold bg-green-600 p-2 px-2 text-white rounded-xl">
-                        {transaction.type}
-                      </span>
-                    </td>
-                  ) : (
-                    <td>
-                      <span className="font-sans font-semibold bg-green-600 p-2 px-2 text-white rounded-xl">
-                        {transaction.type}
-                      </span>
-                    </td>
-                  )}
+                  {transaction.type === "credit" ? (
+                    <>
+                      <td>
+                        <span className="font-sans font-semibold bg-green-600 p-2 px-2 text-white rounded-xl">
+                          {transaction.type}
+                        </span>
+                      </td>
+                      <td>{transaction.date}</td>
+                      <td>
+                        <span className="bg-slate-400 p-2 px-2 text-black rounded-lg text-sm">
+                          {transaction.description}
+                        </span>
+                      </td>
 
-                  <td>{transaction.id}</td>
-                  <td>{transaction.date}</td>
-                  <td>
-                    <span className="bg-slate-400 p-2 px-2 text-black rounded-lg text-sm">
-                      {transaction.description}
-                    </span>
-                  </td>
-                  {transaction.type === "expense" ? (
-                    <td>
-                      <span className="font-sans font-bold  p-2 px-2 text-green-600 rounded-xl">
-                        ${transaction.amount.toFixed(2)}
-                      </span>
-                    </td>
+                      <td>
+                        <span className="font-sans font-bold  p-2 px-2 text-green-600 rounded-xl">
+                          ${transaction.amount.toFixed(2)}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="font-sans font-bold  p-2 px-2 text-green-600 rounded-xl">
+                          ${transaction.amount.toFixed(2)}
+                        </span>
+                      </td>
+                      </>
                   ) : (
-                    <td>
-                      <span className="font-sans font-bold  p-2 px-2 text-green-600 rounded-xl">
-                        ${transaction.amount.toFixed(2)}
-                      </span>
-                    </td>
+                    <></>
                   )}
                 </tr>
               ))}

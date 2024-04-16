@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -12,57 +12,33 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { LIGHT_THEME } from "../../../constants/themeConstants";
 import "./AreaCharts.scss";
-
-const data = [
-  {
-    month: "Jan",
-    Expenses: 70,
-   
-  },
-  {
-    month: "Feb",
-    Expenses: 55,
-   
-  },
-  {
-    month: "Mar",
-    Expenses: 35,
-    
-  },
-  {
-    month: "April",
-    Expenses: 90,
-   
-  },
-  {
-    month: "May",
-    Expenses: 55,
-  
-  },
-  {
-    month: "Jun",
-    Expenses: 30,
-   
-  },
-  {
-    month: "Jul",
-    Expenses: 32,
-   
-  },
-  {
-    month: "Aug",
-    Expenses: 62,
-   
-  },
-  {
-    month: "Sep",
-    Expenses: 55,
-   
-  },
-];
+import axios from "axios";
 
 const AreaBarChartExpense = () => {
   const { theme } = useContext(ThemeContext);
+  const [data, setData] = useState([]);
+
+  const getMonthSaving = async () => {
+    const id = localStorage.getItem("key");
+    try {
+      const response = await axios.post(
+        `http://localhost:7000/api/v1/transaction/financialData/${id}`
+      );
+      if (response.data.success) {
+        // Assuming the response.data.data is an array of objects
+        setData(response.data.data);
+        console.log(response.data.data);
+      } else {
+        console.log("error hai if wale main");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMonthSaving();
+  }, []);
 
   const formatTooltipValue = (value) => {
     return `${value}k`;
@@ -103,11 +79,11 @@ const AreaBarChartExpense = () => {
           >
             <XAxis
               padding={{ left: 10 }}
-              dataKey="month"
+              dataKey="month" // Assuming your data key for month is 'month'
               tickSize={0}
               axisLine={false}
               tick={{
-                fill:  "#676767" ,
+                fill: "#676767",
                 fontSize: 14,
               }}
             />
@@ -133,7 +109,7 @@ const AreaBarChartExpense = () => {
               formatter={formatLegendValue}
             />
             <Bar
-              dataKey="Expenses"
+              dataKey="totalExpense" // Assuming your data key for expenses is 'totalExpense'
               fill="#e3e7fc"
               activeBar={false}
               isAnimationActive={false}

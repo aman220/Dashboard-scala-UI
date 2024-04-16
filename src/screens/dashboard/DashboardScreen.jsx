@@ -11,9 +11,11 @@ import {
   CardBody,
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import getUserDetails from "../../GetUser/getuser";
 const Dashboard = () => {
   const [open, setOpen] = React.useState(false);
   const [month, setMonth] = useState("");
+  const [user, setUser] = useState("");
   const handleOpen = () => setOpen(!open);
   const nav = useNavigate();
   const currmon = new Date().toLocaleDateString();
@@ -30,10 +32,26 @@ const Dashboard = () => {
     check()
   },[])
 
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserDetails();
+        setUser(userData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+ 
+
   return (
     <div className="content-area">
       <AreaTop />
-      <AreaCards />
+      <AreaCards user={user}/>
       <AreaCharts />
       <AreaTable />
       <Dialog open={open} handler={handleOpen}>

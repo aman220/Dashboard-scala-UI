@@ -28,17 +28,17 @@ const Uploadcard = () => {
           tag: note,
           type: "expense",
           date: selectedDate.toISOString().split('T')[0],
-          userId: 2,
+          userId: localStorage.getItem("key"),
           description: note,
         });
       } else if (expenseType === "salary") {
         // If the expense type is "salary", send the request to the saving API
-        await axios.post('http://localhost:7000/api/v1/saving/addIncome', {
+        await axios.post('http://localhost:7000/api/v1/income/addIncome', {
           amount: parseFloat(amount),
           tag: note,
-          type: "Income",
+          type: "credit",
           date: selectedDate.toISOString().split('T')[0],
-          userId: 2,
+          userId: localStorage.getItem("key"),
           description: note,
         });
       }

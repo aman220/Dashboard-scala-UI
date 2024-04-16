@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -12,6 +12,7 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { LIGHT_THEME } from "../../../constants/themeConstants";
 import "./AreaCharts.scss";
+import axios from "axios";
 
 const data = [
   {
@@ -63,6 +64,11 @@ const data = [
 
 const AreaBarChartSavings = () => {
   const { theme } = useContext(ThemeContext);
+  const[data , setData] = useState();
+
+  const getMonthSaving  = async()=>{
+    const response = await axios.post("")
+  }
 
   const formatTooltipValue = (value) => {
     return `${value}k`;

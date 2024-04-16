@@ -1,29 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AreaCards, AreaCharts, AreaTable, AreaTop } from "../../components";
+import getUserDetails from "../../GetUser/getuser";
+import axios from 'axios';
 
 const Generate = () => {
-  const[res , setRes]=  useState("");
+  const [res, setRes] = useState("");
+  const [user, setUser] = useState();
+  const date = new Date().toLocaleDateString();
+  console.log(date);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserDetails();
+        setUser(userData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  // console.log(user.totalBudget)
+  // console.log(user.currentBalance)
+  // console.log(user.totalExpense)
 
   const getGenerateRes = async () => {
     try {
       const response = await axios.post(
         "http://localhost:7000/api/v1/generate",
         {
-          userId: "2",
+          promt: `Please give me suggestions to limit my expenses and increase my savings my total budget for this month is ${user.totalBudget} 
+          and as of now i have already spend ${user.totalExpense} amount from my budget and now i have ${user.currentBalance} remaining amount 
+          in this month current date is ${date} please give me suggestions to limit my expenses and increase savings`,
         }
       );
-      if (response.data.success) {
-        setRecentTransactions(response.data.transaction);
+      if (response) {
+        const formattedResponse = response.data.text
+        .replace(/\*\*(.*?)\*\*/g, (_, p1) => `<strong>${p1}</strong>`)
+        .replace(/\./g, '. ')
+        .replace(/\n/g, '<br/>');
+        setRes(formattedResponse);
+        console.log(response)
       } else {
         console.error(
-          "Failed to fetch recent transactions:",
-          response.data.message
+          response.error
         );
       }
     } catch (error) {
       console.error("Error fetching recent transactions:", error.message);
     }
   };
+  console.log(res);
 
   return (
     <div className="content-area">
@@ -39,7 +67,7 @@ const Generate = () => {
             <h2 className="font-sans lg:text-xl font-bold sm:text-sm md:text-lg">
               Click to Generate..
             </h2>
-            <button className="text-white bg-black shadow-2xl shadow-slate-400 lg:p-2 rounded-lg px-2 sm:p-1 ">
+            <button className="text-white bg-black shadow-2xl shadow-slate-400 lg:p-2 rounded-lg px-2 sm:p-1" onClick={getGenerateRes}>
               GENERATE
             </button>
           </div>
@@ -48,9 +76,7 @@ const Generate = () => {
       <div className="bg-gray-100 p-5">
         <div className="bg-white p-5 shadow-lg rounded-lg">
           <h2 className="font-sans text-lg font-bold">AI :</h2>
-          <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab, sequi.
-          </p>
+          <p dangerouslySetInnerHTML={{ __html: res }}></p>
         </div>
       </div>
     </div>

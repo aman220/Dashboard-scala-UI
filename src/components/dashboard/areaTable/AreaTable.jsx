@@ -17,7 +17,7 @@ const AreaTable = () => {
       const response = await axios.post(
         "http://localhost:7000/api/v1/transaction/getRecentTransaction",
         {
-          userId: "2",
+          userId: localStorage.getItem("key"),
         }
       );
       if (response.data.success) {

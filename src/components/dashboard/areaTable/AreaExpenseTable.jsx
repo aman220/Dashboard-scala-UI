@@ -13,15 +13,13 @@ const AreaExpenseTable = () => {
   }, []);
 
   const getRecentTransaction = async () => {
+    const id = localStorage.getItem("key");
     try {
-      const response = await axios.post(
-        "http://localhost:7000/api/v1/transaction/getRecentTransaction",
-        {
-          userId: "2",
-        }
+      const response = await axios.get(
+        `http://localhost:7000/api/v1/expense/getexpense/${id}`,
       );
       if (response.data.success) {
-        setRecentTransactions(response.data.transaction);
+        setRecentTransactions(response.data.expenses);
       } else {
         console.error(
           "Failed to fetch recent transactions:",
