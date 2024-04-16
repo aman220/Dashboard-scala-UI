@@ -6,7 +6,7 @@ const AreaCharts = () => {
   return (
     <section className="content-area-charts">
       <AreaBarChart />
-      <Uploadcard/>
+      {/* <Uploadcard/> */}
     </section>
   )
 }
